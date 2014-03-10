@@ -15,8 +15,8 @@ low_gamma_s = 'MSG_EEG_POWER_LOWGAMMA'
 mid_gamma_s = 'MSG_EEG_POWER_MIDGAMMA'
 theta_s = 'MSG_EEG_POWER_THETA'
 
-f = open('test2.csv', 'r')  
-f_new = open('revised2.csv', 'w')
+f = open('test_data.csv', 'r')  
+f_new = open('revised.csv', 'w')
 
 queue = []
 record_progress = 0
@@ -109,5 +109,26 @@ for row in csv.DictReader(f):
 			queue=[]
 			record_progress=0
 
+
 f.close()
 f_new.close()
+
+
+f_chosen = open('chosen.csv','w') #
+output = [0,1,2,3]
+
+for row in csv.reader(open('revised.csv')):	
+	s = ''
+	for col in output:
+		for j in range(0, TIME_LENGTH):
+			s += str(row[col+j*8]+',')
+
+		s += str(row[col+TIME_LENGTH*8])+','
+
+		for k in range(0, TIME_LENGTH-1):
+			s+= str(row[col+(TIME_LENGTH+1)*8+k*8])+','
+
+	f_chosen.write(s[:-1])
+	f_chosen.write('\n')
+f_chosen.close()
+
