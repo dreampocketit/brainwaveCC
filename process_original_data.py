@@ -6,6 +6,7 @@ import numpy
 import numpy as np
 
 TIME_LENGTH=3
+
 delta_s = 'MSG_EEG_POWER_DELTA'
 high_alpha_s = 'MSG_EEG_POWER_HIGHALPHA'
 high_beta_s = 'MSG_EEG_POWER_HIGHBETA'
@@ -114,7 +115,7 @@ f.close()
 f_new.close()
 
 
-f_chosen = open('chosen.csv','w') #
+f_chosen = open('chosen.csv','w') 
 output = [0,1,2,3]
 
 for row in csv.reader(open('revised.csv')):	
@@ -128,7 +129,7 @@ for row in csv.reader(open('revised.csv')):
 		for k in range(0, TIME_LENGTH-1):
 			s+= str(row[col+(TIME_LENGTH+1)*8+k*8])+','
 
-	f_chosen.write(s[:-1])
+	f_chosen.write(s[:-1]+','+row[-1])
 	f_chosen.write('\n')
 f_chosen.close()
 
