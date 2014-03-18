@@ -48,17 +48,19 @@ for i in range(1, TIME_LENGTH):
 
 f_new.write(',btn_color\n') #for btn_color
 
-for row in csv.DictReader(f):
 
-	if row['MSG_BLINK'] == 0:
-		continue
+for row in csv.DictReader(f):
+	
+	if int(row['MSG_POOR_SIGNAL']) != 0:
 		queue = []
 		record_progress = 0
+		continue
 	else:
+
 		if record_progress!=TIME_LENGTH: #If is recording
 
-			if row['btn_color']!='0':
-
+			if row['btn_color']!=None:
+				
 				delta = row[delta_s]
 				high_alpha = row[high_alpha_s]
 				high_beta = row[high_beta_s]
@@ -75,7 +77,8 @@ for row in csv.DictReader(f):
 				record_progress = 0
 				queue=[]
 	
-		else: #If queue is full, save data
+		if record_progress==TIME_LENGTH:
+			print row[delta_s]
 
 			for row in queue: #write raw data
 				tmp = ''
@@ -91,7 +94,6 @@ for row in csv.DictReader(f):
 
 				f_new.write(str(np.std(np.array(arr)))+',') #write std
 				arr = []
-				print 'this is std'
 
 			arr = []
 			for num in range(0, 8):
@@ -100,15 +102,16 @@ for row in csv.DictReader(f):
 
 				for  diff in np.diff(np.array(arr)): #write diff
 					f_new.write(str(diff)+',')
-				print 'this is diff' 
 
 				
 				arr = []
 
 
 			f_new.write(row[-1]+'\n') #write btn_color
+
 			queue=[]
 			record_progress=0
+
 
 
 f.close()
