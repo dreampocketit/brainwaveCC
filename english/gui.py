@@ -34,7 +34,7 @@ class App:
         self.hi_there = Button(frame, text="Start", command=self.start_record)
         self.hi_there.pack(side=LEFT)
 
-        for i in range(1,5):
+        for i in range(1,7):
             self.audio_seq.append(i)
         random.shuffle(self.audio_seq)
 
