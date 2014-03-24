@@ -6,7 +6,7 @@ from AppKit import NSSound
 import random
 
 
-RECORD_TIME=10
+RECORD_TIME=9
 
 class App:
 
@@ -18,7 +18,7 @@ class App:
 
     row_data = []
     f_out = open('output.csv','w')
-    f_out.write('delta,midgamma,lowgamma,state\n')
+    f_out.write('delta9,midgamma9,lowgamma9,theta9,delta8,midgamma8,lowgamma8,theta8,delta7,midgamma7,lowgamma7,theta7,delta6,midgamma6,lowgamma6,theta6,delta5,midgamma5,lowgamma5,theta5,state\n')
 
     progress = 0
     audio_seq = []
@@ -40,7 +40,7 @@ class App:
         self.hi_there = Button(frame, text="Start", command=self.start_record)
         self.hi_there.pack(side=LEFT)
 
-        for i in range(1,12):
+        for i in range(1,27):
             self.audio_seq.append(i)
         random.shuffle(self.audio_seq)
 
@@ -68,6 +68,7 @@ class App:
             delta = []
             midgamma = []
             lowgamma = []
+            theta = []
 
 
             print str(self.audio_seq[self.progress])
@@ -86,14 +87,21 @@ class App:
                     delta.append(self.object1.delta)
                     midgamma.append(self.object1.midGamma)
                     lowgamma.append(self.object1.lowGamma)
+                    theta.append(self.object1.theta)
                     print 'recording'
                     time.sleep(1)
             if len(delta)==RECORD_TIME:
                 print "std(delta)="+str(int(np.std(np.array(delta))))
                 print "std(midgamma)="+str(int(np.std(np.array(midgamma))))
                 print "std(lowgamma)="+str(int(np.std(np.array(lowgamma))))
+                print "std(theta)="+str(int(np.std(np.array(theta))))
 
-                self.row_data=[int(np.std(np.array(delta))),int(np.std(np.array(midgamma))),int(np.std(np.array(lowgamma)))]
+                
+                for i in range(0,5):
+                    self.row_data.append(int(np.std(np.array(delta[0:RECORD_TIME-i]))))
+                    self.row_data.append(int(np.std(np.array(midgamma[0:RECORD_TIME-i]))))
+                    self.row_data.append(int(np.std(np.array(lowgamma[0:RECORD_TIME-i]))))
+                    self.row_data.append(int(np.std(np.array(theta[0:RECORD_TIME-i]))))
 
             sound.stop()
 
@@ -102,6 +110,7 @@ class App:
         for ele in self.row_data:
             self.f_out.write(str(ele)+',')
         self.f_out.write(state+'\n')
+        self.row_data = []
 
 
 
