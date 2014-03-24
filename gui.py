@@ -6,15 +6,21 @@ from AppKit import NSSound
 import random
 
 
-sound = NSSound.alloc()
+RECORD_TIME=10
 
 class App:
 
-    object1=NeuroPy("/dev/tty.MindWaveMobile-DevA",57600)
+
+    try:
+        object1=NeuroPy("/dev/tty.MindWaveMobile-DevA",57600)
+    except:
+        print 'bluetooth error'
+
     row_data = []
     f_out = open('output.csv','w')
     f_out.write('delta,midgamma,lowgamma,state\n')
 
+    progress = 0
     audio_seq = []
 
     def __init__(self, master):
@@ -34,11 +40,11 @@ class App:
         self.hi_there = Button(frame, text="Start", command=self.start_record)
         self.hi_there.pack(side=LEFT)
 
-        for i in range(1,5):
+        for i in range(1,12):
             self.audio_seq.append(i)
         random.shuffle(self.audio_seq)
 
-        print self.audio_seq
+        print "english audio sequence:"+str(self.audio_seq)
 
 
         self.object1.start()
@@ -55,34 +61,41 @@ class App:
         self.write_data("don't know")
 
     def start_record(self):
-        delta = []
-        midgamma = []
-        lowgamma = []
-
-
+        if self.object1.poorSignal!=0:
+            print 'signal is poor'
         
-        sound.initWithContentsOfFile_byReference_('1.mp3', True)
-        sound.play()
+        else:
+            delta = []
+            midgamma = []
+            lowgamma = []
 
 
-        for i in range(1,6):
-            if self.object1.poorSignal!=0:
-                print "because signal("+str(self.object1.poorSignal)+") is bad, we skip this round."
-                break
-            else:
-                delta.append(self.object1.delta)
-                midgamma.append(self.object1.midGamma)
-                lowgamma.append(self.object1.lowGamma)
-                print 'record'
-                time.sleep(1)
-        if len(delta)==5:
-            print "std(delta)="+str(int(np.std(np.array(delta))))
-            print "std(midgamma)="+str(int(np.std(np.array(midgamma))))
-            print "std(lowgamma)="+str(int(np.std(np.array(lowgamma))))
+            print str(self.audio_seq[self.progress])
 
-            self.row_data=[int(np.std(np.array(delta))),int(np.std(np.array(midgamma))),int(np.std(np.array(lowgamma)))]
+            sound = NSSound.alloc()
+            sound.initWithContentsOfFile_byReference_(str(self.audio_seq[self.progress])+'.mp3', True)
+            self.progress+=1 
+            sound.play()
 
-        sound.stop()
+
+            for i in range(0,RECORD_TIME):
+                if self.object1.poorSignal!=0:
+                    print "because signal("+str(self.object1.poorSignal)+") is bad, we skip this round."
+                    break
+                else:
+                    delta.append(self.object1.delta)
+                    midgamma.append(self.object1.midGamma)
+                    lowgamma.append(self.object1.lowGamma)
+                    print 'recording'
+                    time.sleep(1)
+            if len(delta)==RECORD_TIME:
+                print "std(delta)="+str(int(np.std(np.array(delta))))
+                print "std(midgamma)="+str(int(np.std(np.array(midgamma))))
+                print "std(lowgamma)="+str(int(np.std(np.array(lowgamma))))
+
+                self.row_data=[int(np.std(np.array(delta))),int(np.std(np.array(midgamma))),int(np.std(np.array(lowgamma)))]
+
+            sound.stop()
 
     def write_data(self,state):
 
