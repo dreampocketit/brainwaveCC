@@ -46,25 +46,31 @@ class App:
         self.un_btn = Button(frame, text="Understand", command=self.know)
         self.un_btn.pack(side=LEFT)
         self.un_btn['state']='disable'
+        self.un_btn['width']='20'
 
         self.don_btn = Button(frame, text="Don't understand", command=self.dont_know)
         self.don_btn.pack(side=LEFT)
         self.don_btn['state']='disable'
+        self.don_btn['width']='20'
 
         self.A_btn = Button(frame, text="A", command=self.process_A)
         self.A_btn.pack(side=LEFT)
         self.A_btn['state']='disable'
+        self.A_btn['width']='20'
 
         self.B_btn = Button(frame, text="B", command=self.process_B)
         self.B_btn.pack(side=LEFT)
         self.B_btn['state']='disable'
+        self.B_btn['width']='20'
 
         self.C_btn = Button(frame, text="C", command=self.process_C)
         self.C_btn.pack(side=LEFT)
         self.C_btn['state']='disable'
+        self.C_btn['width']='20'
 
         self.sta_btn = Button(frame, text="Start", command=self.start_record)
         self.sta_btn.pack(side=LEFT)
+        self.sta_btn['width']='20'
 
         for i in range(11,41):
             self.audio_seq.append(i)
@@ -165,6 +171,7 @@ class App:
 
         if self.object1.poorSignal!=0:
             print 'signal is poor'
+            self.text.insert(INSERT, 'bad signal\n')
         
         else:
             delta = []
