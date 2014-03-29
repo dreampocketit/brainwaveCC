@@ -11,10 +11,6 @@ RECORD_TIME=10
 class App:
 
 
-    try:
-        object1=NeuroPy("/dev/tty.MindWaveMobile-DevA",57600)
-    except:
-        print 'bluetooth error'
 
     row_data = []
     f_out = open('output.csv','w')
@@ -31,37 +27,14 @@ class App:
         self.button = Button(frame, text="QUIT", fg="red", command=frame.quit)
         self.button.pack(side=LEFT)
 
-        self.hi_there = Button(frame, text="Understand", command=self.know)
-        self.hi_there.pack(side=LEFT)
-
-        self.hi_there = Button(frame, text="Don't understand", command=self.dont_know)
-        self.hi_there.pack(side=LEFT)
-
         self.hi_there = Button(frame, text="Start", command=self.start_record)
         self.hi_there.pack(side=LEFT)
 
-        for i in range(1,12):
-            self.audio_seq.append(i)
-        random.shuffle(self.audio_seq)
 
-        print "english audio sequence:"+str(self.audio_seq)
-
-
-        self.object1.start()
-
-
-    def know(self):
-        print 'I know'
-        print self.row_data
-        self.write_data('know')
-
-    def dont_know(self):
-        print 'dont know'
-        print self.row_data
-        self.write_data("don't know")
 
     def start_record(self):
-        if self.object1.poorSignal!=0:
+        #if self.object1.poorSignal!=0:
+        if False:
             print 'signal is poor'
         
         else:
@@ -70,10 +43,8 @@ class App:
             lowgamma = []
 
 
-            print str(self.audio_seq[self.progress])
-
             sound = NSSound.alloc()
-            sound.initWithContentsOfFile_byReference_(str(self.audio_seq[self.progress])+'.mp3', True)
+            sound.initWithContentsOfFile_byReference_('Cloud Nothings - Stay Useless.mp3', True)
             self.progress+=1 
             sound.play()
 

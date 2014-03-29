@@ -18,7 +18,7 @@ class App:
 
     row_data = []
     f_out = open('output.csv','w')
-    f_out.write('delta,midgamma,lowgamma,theta,highalpha,lowalpha,highbeta,lowbeta,state,answer\n')
+    f_out.write('delta,midgamma,lowgamma,theta,highalpha,lowalpha,highbeta,lowbeta,state\n')
 
     cor_or_not = ''
 
@@ -53,40 +53,13 @@ class App:
         self.hard_btn['state']='disable'
         self.hard_btn['width']='15'
 
-        self.A_btn = Button(frame, text="A", command=self.process_A)
-        self.A_btn.pack(side=LEFT)
-        self.A_btn['state']='disable'
-        self.A_btn['width']='15'
-
-        self.B_btn = Button(frame, text="B", command=self.process_B)
-        self.B_btn.pack(side=LEFT)
-        self.B_btn['state']='disable'
-        self.B_btn['width']='15'
-
-        self.C_btn = Button(frame, text="C", command=self.process_C)
-        self.C_btn.pack(side=LEFT)
-        self.C_btn['state']='disable'
-        self.C_btn['width']='15'
-
         self.sta_btn = Button(frame, text="Start", command=self.start_record)
         self.sta_btn.pack(side=LEFT)
         self.sta_btn['width']='15'
 
-        for i in range(11,41):
-            self.audio_seq.append(i)
-        random.shuffle(self.audio_seq)
-
-        answer_sheet = open("answer_sheet.txt",'r')
-
-        for row in answer_sheet:
-
-            self.ques.append(row.split('::')[1])
-            self.answer.append(row.split('::')[2])
-
-        print "english audio sequence:"+str(self.audio_seq)
-
-
         self.object1.start()
+
+
 
 
     def easy(self):
@@ -94,12 +67,8 @@ class App:
         self.cor_or_not = 'easy'
         self.easy_btn['state']='disable'
         self.hard_btn['state']='disable'
-        self.A_btn['state']='normal'
-        self.B_btn['state']='normal'
-        self.C_btn['state']='normal'
-        choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
-        for cho in choices:
-        	self.text.insert(INSERT, cho+'\n')
+        self.sta_btn['state'] = 'normal'
+        self.text.insert(INSERT, 'easy\n')
         self.text.see(END)
 
     def hard(self,):
@@ -107,68 +76,14 @@ class App:
         self.cor_or_not = "hard"
         self.easy_btn['state']='disable'
         self.hard_btn['state']='disable'
-        self.A_btn['state']='normal'
-        self.B_btn['state']='normal'
-        self.C_btn['state']='normal'
-        choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
-        for cho in choices:
-        	self.text.insert(INSERT, cho+'\n')
+        self.sta_btn['state'] = 'normal'
+        self.text.insert(INSERT, 'hard\n')
         self.text.see(END)
-
-    def process_A(self):
-        print 'choose A'
-
-        if self.answer[int(self.audio_seq[self.progress])-11][0] == 'A':
-            print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
-            print 'correct'
-            self.write_data(self.cor_or_not,'correct')
-        else:
-            print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
-            print 'wrong'
-            self.write_data(self.cor_or_not,'wrong')
-        self.sta_btn['state'] = 'normal'
-        self.A_btn['state']='disable'
-        self.B_btn['state']='disable'
-        self.C_btn['state']='disable'
-        self.progress+=1
-
-    def process_B(self):
-        print 'choose B'
-
-        if self.answer[int(self.audio_seq[self.progress])-11][0] == 'B':
-            print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
-            print 'correct'
-            self.write_data(self.cor_or_not,'correct')
-        else:
-            print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
-            print 'wrong'
-            self.write_data(self.cor_or_not,'wrong')
-        self.sta_btn['state'] = 'normal'
-        self.A_btn['state']='disable'
-        self.B_btn['state']='disable'
-        self.C_btn['state']='disable'
-        self.progress+=1
-
-    def process_C(self):
-        print 'choose C'
-
-        if self.answer[int(self.audio_seq[self.progress])-11][0] == 'C':
-            print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
-            print 'correct'
-            self.write_data(self.cor_or_not,'correct')
-        else:
-            print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
-            print 'wrong'
-            self.write_data(self.cor_or_not,'wrong')
-        self.sta_btn['state'] = 'normal'
-        self.A_btn['state']='disable'
-        self.B_btn['state']='disable'
-        self.C_btn['state']='disable'
-        self.progress+=1
 
 
     def start_record(self):
 
+        progress+=1
         if self.object1.poorSignal!=0:
             print 'signal is poor'
             self.text.insert(INSERT, 'bad signal\n')
@@ -183,15 +98,10 @@ class App:
             highbeta = []
             lowbeta = []
 
-            self.text.insert(INSERT,'\n\n')
-            self.text.insert(INSERT, 'progress:'+str(self.progress)+':\n')
-            self.text.insert(INSERT, 'question:'+str(self.audio_seq[self.progress])+':\n')
-            self.text.see(END)
-            print str(self.audio_seq[self.progress])
 
-            sound = NSSound.alloc()
-            sound.initWithContentsOfFile_byReference_(str(self.audio_seq[self.progress])+'.mp3', True)
-            sound.play()
+            self.text.insert(INSERT, 'progress:'+str(self.progress)+':\n')
+            self.text.see(END)
+
 
 
             for i in range(0,RECORD_TIME):
@@ -234,11 +144,6 @@ class App:
                 self.sta_btn['state'] = 'disabled'
 
             
-                #for i in range(0,5):
-                #    self.row_data.append(int(np.std(np.array(delta[0:RECORD_TIME-i]))))
-                #    self.row_data.append(int(np.std(np.array(midgamma[0:RECORD_TIME-i]))))
-                #    self.row_data.append(int(np.std(np.array(lowgamma[0:RECORD_TIME-i]))))
-                #    self.row_data.append(int(np.std(np.array(theta[0:RECORD_TIME-i]))))
 
             sound.stop()
 
@@ -249,7 +154,7 @@ class App:
                 self.f_out.write(str(data)+'-')
             self.f_out.write(str(ele[-1]))
             self.f_out.write(',')
-        self.f_out.write(state+','+correct+'\n')
+        self.f_out.write(state+'\n')
         self.row_data = []
         print '=============write=============='
 

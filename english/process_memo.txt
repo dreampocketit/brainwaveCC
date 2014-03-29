@@ -1,0 +1,3 @@
+1. first round with 9 secs data, in this experiment, after participant listened audio, he will spend effort to think other things.
+
+2. if they didn’t understand question very well, they will induce answer with choices.
