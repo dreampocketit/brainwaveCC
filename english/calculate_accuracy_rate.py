@@ -1,6 +1,6 @@
 import Orange
 
-data = Orange.data.Table("2-5.csv")
+data = Orange.data.Table("power1-6.csv")
 #ma = Orange.feature.scoring.score_all(data)
 
 bayes = Orange.classification.neural.NeuralNetworkLearner(n_mid=7, reg_fact=1, max_iter=300, rand=None)

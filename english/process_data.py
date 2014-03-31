@@ -95,7 +95,7 @@ def power(sta, sto):
 		f.write(str(row['state'])+'\n')
 
 
-power(1,5)
+power(1,6)
 
 
 
