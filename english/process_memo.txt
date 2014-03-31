@@ -1,3 +1,5 @@
 1. first round with 9 secs data, in this experiment, after participant listened audio, he will spend effort to think other things.
 
 2. if they didn’t understand question very well, they will induce answer with choices.
+
+3. when someone is calculating, 1.56 to 5.46 Hz is significant increase, In 7.02 and 8.58 Hz, no significant results were obtained. (from EEG delta activity: an indicator of attention to internal processing during performance of mental tasks)

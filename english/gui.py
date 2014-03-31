@@ -18,7 +18,7 @@ class App:
 
     row_data = []
     f_out = open('output.csv','w')
-    f_out.write('delta,midgamma,lowgamma,theta,highalpha,lowalpha,highbeta,lowbeta,state,answer\n')
+    f_out.write('delta,theta,lowalpha,highalpha,lowbeta,highbeta,lowgamma,midgamma,state,answer\n')
 
     cor_or_not = ''
 
@@ -99,7 +99,7 @@ class App:
         self.C_btn['state']='normal'
         choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
         for cho in choices:
-        	self.text.insert(INSERT, cho+'\n')
+            self.text.insert(INSERT, cho+'\n')
         self.text.see(END)
 
     def hard(self,):
@@ -112,7 +112,7 @@ class App:
         self.C_btn['state']='normal'
         choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
         for cho in choices:
-        	self.text.insert(INSERT, cho+'\n')
+            self.text.insert(INSERT, cho+'\n')
         self.text.see(END)
 
     def process_A(self):
@@ -207,6 +207,11 @@ class App:
                     lowalpha.append(self.object1.lowAlpha)
                     highbeta.append(self.object1.highBeta)
                     lowbeta.append(self.object1.lowBeta)
+
+                    print 'delta:'+str(self.object1.delta)
+                    print 'theta:'+str(self.object1.theta)
+                    print 'highalpha:'+str(self.object1.highAlpha)
+                    print 'midgamma:'+str(self.object1.midGamma)
                     print 'recording'
                     print self.object1.poorSignal
                     time.sleep(1)
@@ -218,13 +223,18 @@ class App:
                 #print "std(theta)="+str(int(np.std(np.array(theta))))
 
                 self.row_data.append(delta)
-                self.row_data.append(midgamma)
-                self.row_data.append(lowgamma)
                 self.row_data.append(theta)
-                self.row_data.append(highalpha)
                 self.row_data.append(lowalpha)
-                self.row_data.append(highbeta)
+                self.row_data.append(highalpha)
                 self.row_data.append(lowbeta)
+                self.row_data.append(highbeta)
+                self.row_data.append(lowgamma)
+                self.row_data.append(midgamma)
+                
+                
+                
+                
+                
 
 
                 print self.row_data
