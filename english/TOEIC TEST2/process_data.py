@@ -38,7 +38,7 @@ def power(sta, sto):
 	f.write('state\n')
 
 
-	for row in csv.DictReader(open('Jennifer.csv','rU')):
+	for row in csv.DictReader(open('output.csv','rU')):
 		delta = row['delta'].split('-')
 		delta = [ int(x) for x in delta ]
 
@@ -95,7 +95,7 @@ def power(sta, sto):
 		f.write(str(row['state'])+'\n')
 
 
-power(2,5)
+power(1,5)
 
 
 
