@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-import csv
-import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
-
 from Tkinter import *
 import numpy as np
 from NeuroPy import NeuroPy
 import time
 from AppKit import NSSound
 import random
+import tkMessageBox
 
-
+ANSWER_SHEET = '3-answer_sheet.txt'
+doc_id = ANSWER_SHEET.split('-')[0]
 RECORD_TIME=7
 
 class App:
@@ -26,10 +22,12 @@ class App:
     f_out = open('output.csv','w')
     f_out.write('delta,theta,lowalpha,highalpha,lowbeta,highbeta,lowgamma,midgamma,state,answer\n')
 
-    cor_or_not = ''
+    dif_or_not = ''
 
     progress = 0
     audio_seq = []
+
+    win = None
 
     ques = []
     answer = []
@@ -49,30 +47,6 @@ class App:
         self.qui_btn = Button(frame, text="QUIT", fg="red", command=frame.quit)
         self.qui_btn.pack(side=LEFT)
 
-        self.easy_btn = Button(frame, text="easy", command=self.easy)
-        self.easy_btn.pack(side=LEFT)
-        self.easy_btn['state']='disable'
-        self.easy_btn['width']='15'
-
-        self.hard_btn = Button(frame, text="hard", command=self.hard)
-        self.hard_btn.pack(side=LEFT)
-        self.hard_btn['state']='disable'
-        self.hard_btn['width']='15'
-
-        self.A_btn = Button(frame, text="A", command=self.process_A)
-        self.A_btn.pack(side=LEFT)
-        self.A_btn['state']='disable'
-        self.A_btn['width']='15'
-
-        self.B_btn = Button(frame, text="B", command=self.process_B)
-        self.B_btn.pack(side=LEFT)
-        self.B_btn['state']='disable'
-        self.B_btn['width']='15'
-
-        self.C_btn = Button(frame, text="C", command=self.process_C)
-        self.C_btn.pack(side=LEFT)
-        self.C_btn['state']='disable'
-        self.C_btn['width']='15'
 
         self.sta_btn = Button(frame, text="Start", command=self.start_record)
         self.sta_btn.pack(side=LEFT)
@@ -82,10 +56,10 @@ class App:
             self.audio_seq.append(i)
         random.shuffle(self.audio_seq)
 
-        answer_sheet = open("2-answer_sheet.txt",'r')
-        
+        answer_sheet = open(ANSWER_SHEET,'r')
+
         for row in answer_sheet:
-            
+
             self.ques.append(row.split('::')[1])
             self.answer.append(row.split('::')[2])
 
@@ -97,29 +71,13 @@ class App:
 
     def easy(self):
         print 'easy'
-        self.cor_or_not = 'easy'
-        self.easy_btn['state']='disable'
-        self.hard_btn['state']='disable'
-        self.A_btn['state']='normal'
-        self.B_btn['state']='normal'
-        self.C_btn['state']='normal'
-        choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
-        for cho in choices:
-            self.text.insert(INSERT, cho+'\n')
-        self.text.see(END)
+        self.dif_or_not = 'easy'
+        self.dialog()
 
     def hard(self,):
         print 'hard'
-        self.cor_or_not = "hard"
-        self.easy_btn['state']='disable'
-        self.hard_btn['state']='disable'
-        self.A_btn['state']='normal'
-        self.B_btn['state']='normal'
-        self.C_btn['state']='normal'
-        choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
-        for cho in choices:
-            self.text.insert(INSERT, cho+'\n')
-        self.text.see(END)
+        self.dif_or_not = "hard"
+        self.dialog()
 
     def process_A(self):
         print 'choose A'
@@ -127,16 +85,14 @@ class App:
         if self.answer[int(self.audio_seq[self.progress])-11][0] == 'A':
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'correct'
-            self.write_data(self.cor_or_not,'correct')
+            self.write_data(self.dif_or_not,'correct')
         else:
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'wrong'
-            self.write_data(self.cor_or_not,'wrong')
+            self.write_data(self.dif_or_not,'wrong')
         self.sta_btn['state'] = 'normal'
-        self.A_btn['state']='disable'
-        self.B_btn['state']='disable'
-        self.C_btn['state']='disable'
         self.progress+=1
+        self.win.destroy()
 
     def process_B(self):
         print 'choose B'
@@ -144,16 +100,14 @@ class App:
         if self.answer[int(self.audio_seq[self.progress])-11][0] == 'B':
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'correct'
-            self.write_data(self.cor_or_not,'correct')
+            self.write_data(self.dif_or_not,'correct')
         else:
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'wrong'
-            self.write_data(self.cor_or_not,'wrong')
+            self.write_data(self.dif_or_not,'wrong')
         self.sta_btn['state'] = 'normal'
-        self.A_btn['state']='disable'
-        self.B_btn['state']='disable'
-        self.C_btn['state']='disable'
         self.progress+=1
+        self.win.destroy()
 
     def process_C(self):
         print 'choose C'
@@ -161,22 +115,39 @@ class App:
         if self.answer[int(self.audio_seq[self.progress])-11][0] == 'C':
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'correct'
-            self.write_data(self.cor_or_not,'correct')
+            self.write_data(self.dif_or_not,'correct')
         else:
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'wrong'
-            self.write_data(self.cor_or_not,'wrong')
+            self.write_data(self.dif_or_not,'wrong')
         self.sta_btn['state'] = 'normal'
-        self.A_btn['state']='disable'
-        self.B_btn['state']='disable'
-        self.C_btn['state']='disable'
         self.progress+=1
+        self.win.destroy()
+
+
+    def difficulty(self):
+        return tkMessageBox.askyesno(title = 'question', message = 'Is it difficult for you?')
+
+    def dialog(self):
+
+        self.win = Toplevel()
+        tmp_s = ''
+        choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
+        for cho in choices:
+            tmp_s+= cho+'\n'
+        self.text.see(END)                                     
+        Label(self.win,  text=tmp_s).pack()   
+        Button(self.win, text='A', command=self.process_A).pack(side=LEFT)
+        Button(self.win, text='B', command=self.process_B).pack(side=LEFT)
+        Button(self.win, text='C', command=self.process_C).pack(side=LEFT)   
+    
+        print 'show up' 
 
 
     def start_record(self):
 
         if self.object1.poorSignal!=0:
-            print 'signal is poor'
+            print 'signal is poor:'+str(self.object1.poorSignal)
             self.text.insert(INSERT, 'bad signal\n')
         
         else:
@@ -196,7 +167,7 @@ class App:
             print str(self.audio_seq[self.progress])
 
             sound = NSSound.alloc()
-            sound.initWithContentsOfFile_byReference_('2-'+str(self.audio_seq[self.progress])+'.mp3', True)
+            sound.initWithContentsOfFile_byReference_(str(doc_id)+'-'+str(self.audio_seq[self.progress])+'.mp3', True)
             sound.play()
 
 
@@ -223,10 +194,6 @@ class App:
                     time.sleep(1)
 
             if len(delta)==RECORD_TIME:
-                #print "std(delta)="+str(int(np.std(np.array(delta))))
-                #print "std(midgamma)="+str(int(np.std(np.array(midgamma))))
-                #print "std(lowgamma)="+str(int(np.std(np.array(lowgamma))))
-                #print "std(theta)="+str(int(np.std(np.array(theta))))
 
                 self.row_data.append(delta)
                 self.row_data.append(theta)
@@ -237,24 +204,17 @@ class App:
                 self.row_data.append(lowgamma)
                 self.row_data.append(midgamma)
                 
-                
-                
-                
-                
-
 
                 print self.row_data
 
-                self.easy_btn['state']='normal'
-                self.hard_btn['state']='normal'
+                if self.difficulty():
+                    self.hard()
+                else:
+                    self.easy()
+
+
                 self.sta_btn['state'] = 'disabled'
 
-            
-                #for i in range(0,5):
-                #    self.row_data.append(int(np.std(np.array(delta[0:RECORD_TIME-i]))))
-                #    self.row_data.append(int(np.std(np.array(midgamma[0:RECORD_TIME-i]))))
-                #    self.row_data.append(int(np.std(np.array(lowgamma[0:RECORD_TIME-i]))))
-                #    self.row_data.append(int(np.std(np.array(theta[0:RECORD_TIME-i]))))
 
             sound.stop()
 
@@ -276,6 +236,7 @@ class App:
 root = Tk()
 
 app = App(root)
+
 
 root.mainloop()
 root.destroy()

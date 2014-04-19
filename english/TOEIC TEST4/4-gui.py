@@ -6,7 +6,7 @@ from AppKit import NSSound
 import random
 import tkMessageBox
 
-ANSWER_SHEET = '1-answer_sheet.txt'
+ANSWER_SHEET = '4-answer_sheet.txt'
 doc_id = ANSWER_SHEET.split('-')[0]
 RECORD_TIME=7
 
@@ -72,13 +72,11 @@ class App:
     def easy(self):
         print 'easy'
         self.dif_or_not = 'easy'
-        self.dif_win.destroy()
         self.dialog()
 
     def hard(self,):
         print 'hard'
         self.dif_or_not = "hard"
-        self.dif_win.destroy()
         self.dialog()
 
     def process_A(self):
@@ -92,9 +90,9 @@ class App:
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'wrong'
             self.write_data(self.dif_or_not,'wrong')
+        self.sta_btn['state'] = 'normal'
         self.progress+=1
         self.win.destroy()
-        self.start_record()
 
     def process_B(self):
         print 'choose B'
@@ -107,9 +105,9 @@ class App:
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'wrong'
             self.write_data(self.dif_or_not,'wrong')
+        self.sta_btn['state'] = 'normal'
         self.progress+=1
         self.win.destroy()
-        self.start_record()
 
     def process_C(self):
         print 'choose C'
@@ -122,49 +120,35 @@ class App:
             print 'the answer is:'+self.answer[int(self.audio_seq[self.progress])-11]
             print 'wrong'
             self.write_data(self.dif_or_not,'wrong')
+        self.sta_btn['state'] = 'normal'
         self.progress+=1
         self.win.destroy()
-        self.start_record()
 
 
     def difficulty(self):
-
-        print 'difficulty'
-        self.dif_win = Toplevel()
-        self.dif_win.geometry("300x150-0-0")
-        Label(self.dif_win,  text='Is it diffucult to you?').pack()
-        Button(self.dif_win, text='difficult', command=self.hard).pack(side=RIGHT)
-        Button(self.dif_win, text='easy', command=self.easy).pack(side=RIGHT)
-
-        
+        return tkMessageBox.askyesno(title = 'question', message = 'Is it difficult for you?')
 
     def dialog(self):
 
         self.win = Toplevel()
-        self.win.geometry("400x150-0-0")
         tmp_s = ''
         choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
         for cho in choices:
             tmp_s+= cho+'\n'
         self.text.see(END)                                     
-        Label(self.win,  text=tmp_s).pack()
-        #photo=PhotoImage(file="test.jpg")
-        Button(self.win, text='C', command=self.process_C).pack(side=RIGHT)
-        Button(self.win, text='B', command=self.process_B).pack(side=RIGHT)
-        Button(self.win, text='A', command=self.process_A).pack(side=RIGHT)
-    def test(self):
-        print 123
-           
+        Label(self.win,  text=tmp_s).pack()   
+        Button(self.win, text='A', command=self.process_A).pack(side=LEFT)
+        Button(self.win, text='B', command=self.process_B).pack(side=LEFT)
+        Button(self.win, text='C', command=self.process_C).pack(side=LEFT)   
+    
+        print 'show up' 
 
 
     def start_record(self):
-        if self.progress == 30:
-            print 'No more question'
-            return 0
+
         if self.object1.poorSignal!=0:
             print 'signal is poor:'+str(self.object1.poorSignal)
             self.text.insert(INSERT, 'bad signal\n')
-            self.sta_btn['state'] = 'normal'
         
         else:
             delta = []
@@ -208,7 +192,6 @@ class App:
                     print 'recording'
                     print self.object1.poorSignal
                     time.sleep(1)
-            sound.stop()
 
             if len(delta)==RECORD_TIME:
 
@@ -220,13 +203,20 @@ class App:
                 self.row_data.append(highbeta)
                 self.row_data.append(lowgamma)
                 self.row_data.append(midgamma)
+                
+
                 print self.row_data
+
+                if self.difficulty():
+                    self.hard()
+                else:
+                    self.easy()
+
+
                 self.sta_btn['state'] = 'disabled'
 
-                self.difficulty()
-            else:
-                self.start_record()
 
+            sound.stop()
 
     def write_data(self,state,correct):
 

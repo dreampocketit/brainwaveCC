@@ -6,7 +6,7 @@ from AppKit import NSSound
 import random
 import tkMessageBox
 
-ANSWER_SHEET = '1-answer_sheet.txt'
+ANSWER_SHEET = '2-answer_sheet.txt'
 doc_id = ANSWER_SHEET.split('-')[0]
 RECORD_TIME=7
 
@@ -131,7 +131,7 @@ class App:
 
         print 'difficulty'
         self.dif_win = Toplevel()
-        self.dif_win.geometry("300x150-0-0")
+        self.dif_win.geometry("300x150")
         Label(self.dif_win,  text='Is it diffucult to you?').pack()
         Button(self.dif_win, text='difficult', command=self.hard).pack(side=RIGHT)
         Button(self.dif_win, text='easy', command=self.easy).pack(side=RIGHT)
@@ -141,26 +141,21 @@ class App:
     def dialog(self):
 
         self.win = Toplevel()
-        self.win.geometry("400x150-0-0")
+        self.win.geometry("400x150")
         tmp_s = ''
         choices = self.ques[int(self.audio_seq[self.progress])-11].split('(')
         for cho in choices:
             tmp_s+= cho+'\n'
         self.text.see(END)                                     
         Label(self.win,  text=tmp_s).pack()
-        #photo=PhotoImage(file="test.jpg")
         Button(self.win, text='C', command=self.process_C).pack(side=RIGHT)
         Button(self.win, text='B', command=self.process_B).pack(side=RIGHT)
         Button(self.win, text='A', command=self.process_A).pack(side=RIGHT)
-    def test(self):
-        print 123
            
 
 
     def start_record(self):
-        if self.progress == 30:
-            print 'No more question'
-            return 0
+
         if self.object1.poorSignal!=0:
             print 'signal is poor:'+str(self.object1.poorSignal)
             self.text.insert(INSERT, 'bad signal\n')
